@@ -1,14 +1,19 @@
 package com.javarush.restonspring.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Notice {
-    private Long id;
-    private Long topicId;
+@Entity
+@Table(name = "tbl_notice")
+@Getter
+@Setter
+public class Notice extends BaseEntity {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
+
+    @Column(name = "content", nullable = false, length = 2048)
     private String content;
 }

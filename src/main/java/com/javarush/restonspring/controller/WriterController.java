@@ -5,12 +5,11 @@ import com.javarush.restonspring.dto.response.WriterResponseTo;
 import com.javarush.restonspring.mapper.WriterMapper;
 import com.javarush.restonspring.model.Writer;
 import com.javarush.restonspring.service.impl.WriterServiceImpl;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1.0/writers")
@@ -26,8 +25,8 @@ public class WriterController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WriterResponseTo create(@Valid @RequestBody WriterRequestTo requestDto) {
-        Writer writer = writerMapper.toEntity(requestDto);
+    public WriterResponseTo create(@Valid @RequestBody WriterRequestTo requestTo) {
+        Writer writer = writerMapper.toEntity(requestTo);
         return writerMapper.toDto(writerService.create(writer));
     }
 
@@ -37,21 +36,32 @@ public class WriterController {
     }
 
     @GetMapping
-    public List<WriterResponseTo> getAll() {
-        return writerService.getAll().stream()
-                .map(writerMapper::toDto)
-                .collect(Collectors.toList());
+    @ResponseStatus(HttpStatus.OK)
+    public Page<WriterResponseTo> getAll(Pageable pageable) {
+        return writerService.getAll(pageable).map(writerMapper::toDto);
     }
 
     @PutMapping("/{id}")
-    public WriterResponseTo update(@PathVariable Long id, @Valid @RequestBody WriterRequestTo requestDto) {
-        Writer updatedWriter = writerMapper.toEntity(requestDto);
-        return writerMapper.toDto(writerService.update(id, updatedWriter));
+    public WriterResponseTo update(@PathVariable Long id, @Valid @RequestBody WriterRequestTo requestTo) {
+        Writer writer = writerMapper.toEntity(requestTo);
+        return writerMapper.toDto(writerService.update(id, writer));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         writerService.deleteById(id);
+    }
+
+    @GetMapping("/search")
+    public Page<WriterResponseTo> search(@RequestParam(required = false) String login,
+                                         @RequestParam(required = false) String name,
+                                         Pageable pageable) {
+        if (login != null) {
+            return writerService.findByLoginContaining(login, pageable).map(writerMapper::toDto);
+        } else if (name != null) {
+            return writerService.findByName(name, pageable).map(writerMapper::toDto);
+        }
+        return writerService.getAll(pageable).map(writerMapper::toDto);
     }
 }

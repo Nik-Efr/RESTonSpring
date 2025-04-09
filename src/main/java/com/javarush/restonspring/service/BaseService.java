@@ -1,5 +1,8 @@
 package com.javarush.restonspring.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface BaseService<T> {
@@ -8,6 +11,8 @@ public interface BaseService<T> {
     T getById(Long id);
 
     List<T> getAll();
+
+    Page<T> getAll(Pageable pageable);
 
     T update(Long id, T entity);
 

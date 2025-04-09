@@ -2,18 +2,22 @@ package com.javarush.restonspring.service.impl;
 
 import com.javarush.restonspring.exception.ResourceNotFoundException;
 import com.javarush.restonspring.model.Writer;
-import com.javarush.restonspring.repository.impl.WriterRepositoryImpl;
+import com.javarush.restonspring.repository.WriterRepository;
 import com.javarush.restonspring.service.BaseService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class WriterServiceImpl implements BaseService<Writer> {
 
-    private final WriterRepositoryImpl writerRepository;
+    private final WriterRepository writerRepository;
 
-    public WriterServiceImpl(WriterRepositoryImpl writerRepository) {
+    public WriterServiceImpl(WriterRepository writerRepository) {
         this.writerRepository = writerRepository;
     }
 
@@ -23,14 +27,22 @@ public class WriterServiceImpl implements BaseService<Writer> {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Writer getById(Long id) {
         return writerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Writer with ID " + id + " not found"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Writer> getAll() {
         return writerRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Writer> getAll(Pageable pageable) {
+        return writerRepository.findAll(pageable);
     }
 
     @Override
@@ -48,5 +60,16 @@ public class WriterServiceImpl implements BaseService<Writer> {
             throw new ResourceNotFoundException("Writer with ID " + id + " not found");
         }
         writerRepository.deleteById(id);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<Writer> findByLoginContaining(String login, Pageable pageable) {
+        return writerRepository.findByLoginContaining(login, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Writer> findByName(String name, Pageable pageable) {
+        return writerRepository.findByFirstnameContainingOrLastnameContaining(name, name, pageable);
     }
 }
