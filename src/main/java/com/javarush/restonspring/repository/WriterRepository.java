@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WriterRepository extends BaseRepository<Writer, Long> {
     Page<Writer> findByLoginContaining(String login, Pageable pageable);
-
     Page<Writer> findByFirstnameContainingOrLastnameContaining(String firstname, String lastname, Pageable pageable);
+    boolean existsByLogin(String login);
 }

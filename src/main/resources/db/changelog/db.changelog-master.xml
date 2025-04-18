@@ -105,4 +105,12 @@
         <addPrimaryKey tableName="tbl_topic_label"
                        columnNames="topic_id,label_id"/>
     </changeSet>
+
+    <changeSet id="3" author="efremov">
+        <addUniqueConstraint
+                tableName="tbl_topic"
+                columnNames="title"
+                constraintName="uc_topic_title"/>
+    </changeSet>
+
 </databaseChangeLog>

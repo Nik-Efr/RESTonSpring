@@ -1,5 +1,6 @@
 package com.javarush.restonspring.service.impl;
 
+import com.javarush.restonspring.exception.DuplicateLoginException;
 import com.javarush.restonspring.exception.ResourceNotFoundException;
 import com.javarush.restonspring.model.Writer;
 import com.javarush.restonspring.repository.WriterRepository;
@@ -23,8 +24,12 @@ public class WriterServiceImpl implements BaseService<Writer> {
 
     @Override
     public Writer create(Writer writer) {
+        if (writerRepository.existsByLogin(writer.getLogin())) {
+            throw new DuplicateLoginException(writer.getLogin());
+        }
         return writerRepository.save(writer);
     }
+
 
     @Override
     @Transactional(readOnly = true)

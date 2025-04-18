@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1.0/topics")
 public class TopicController {
@@ -36,8 +38,11 @@ public class TopicController {
     }
 
     @GetMapping
-    public Page<TopicResponseTo> getAll(Pageable pageable) {
-        return topicService.getAll(pageable).map(topicMapper::toDto);
+    @ResponseStatus(HttpStatus.OK)
+    public List<TopicResponseTo> getAll() {
+        return topicService.getAll().stream()
+                .map(topicMapper::toDto)
+                .toList();
     }
 
     @PutMapping("/{id}")

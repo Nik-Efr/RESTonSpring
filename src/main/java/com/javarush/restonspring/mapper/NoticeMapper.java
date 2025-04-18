@@ -6,11 +6,13 @@ import com.javarush.restonspring.model.Notice;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",uses = TopicMapper.class)
 public interface NoticeMapper {
 
     @Mapping(target = "id", ignore = true)
-    Notice toEntity(NoticeRequestTo dto);
+    @Mapping(target = "topic", source = "topicId")
+    Notice toEntity(NoticeRequestTo requestTo);
 
-    NoticeResponseTo toDto(Notice entity);
+    @Mapping(target = "topicId", source = "topic.id")
+    NoticeResponseTo toDto(Notice notice);
 }

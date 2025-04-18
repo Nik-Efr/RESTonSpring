@@ -5,12 +5,13 @@ import com.javarush.restonspring.dto.response.NoticeResponseTo;
 import com.javarush.restonspring.mapper.NoticeMapper;
 import com.javarush.restonspring.model.Notice;
 import com.javarush.restonspring.service.impl.NoticeServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1.0/notices")
@@ -37,8 +38,10 @@ public class NoticeController {
     }
 
     @GetMapping
-    public Page<NoticeResponseTo> getAll(Pageable pageable) {
-        return noticeService.getAll(pageable).map(noticeMapper::toDto);
+    public List<NoticeResponseTo> getAll() {
+        return noticeService.getAll().stream()
+                .map(noticeMapper::toDto)
+                .toList();
     }
 
     @PutMapping("/{id}")

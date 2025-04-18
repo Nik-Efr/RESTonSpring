@@ -13,4 +13,5 @@ public interface LabelMapper {
     Label toEntity(LabelRequestTo dto);
 
     LabelResponseTo toDto(Label entity);
+
 }

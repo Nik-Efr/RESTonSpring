@@ -1,7 +1,9 @@
 package com.javarush.restonspring.service.impl;
 
+import com.javarush.restonspring.exception.DuplicateTitleException;
 import com.javarush.restonspring.exception.ResourceNotFoundException;
 import com.javarush.restonspring.model.Topic;
+import com.javarush.restonspring.repository.LabelRepository;
 import com.javarush.restonspring.repository.TopicRepository;
 import com.javarush.restonspring.repository.WriterRepository;
 import com.javarush.restonspring.service.BaseService;
@@ -19,10 +21,11 @@ public class TopicServiceImpl implements BaseService<Topic> {
 
     private final TopicRepository topicRepository;
     private final WriterRepository writerRepository;
-
-    public TopicServiceImpl(TopicRepository topicRepository, WriterRepository writerRepository) {
+    private final LabelRepository labelRepository;
+    public TopicServiceImpl(TopicRepository topicRepository, WriterRepository writerRepository, LabelRepository labelRepository) {
         this.topicRepository = topicRepository;
         this.writerRepository = writerRepository;
+        this.labelRepository = labelRepository;
     }
 
     @Override
@@ -30,6 +33,10 @@ public class TopicServiceImpl implements BaseService<Topic> {
         if (topic.getWriter() != null && topic.getWriter().getId() != null) {
             writerRepository.findById(topic.getWriter().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Writer with ID " + topic.getWriter().getId() + " not found"));
+        }
+
+        if (topicRepository.existsByTitle(topic.getTitle())) {
+            throw new DuplicateTitleException(topic.getTitle());
         }
 
         LocalDateTime now = LocalDateTime.now();

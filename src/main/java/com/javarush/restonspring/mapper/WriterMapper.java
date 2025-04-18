@@ -11,5 +11,15 @@ public interface WriterMapper {
     @Mapping(target = "id", ignore = true)
     Writer toEntity(WriterRequestTo dto);
 
-    WriterResponseTo toDto(Writer entity);
+    @Mapping(target = "id", source = "id")
+    WriterResponseTo toDto(Writer writer);
+
+    default Writer map(Long writerId) {
+        if (writerId == null) return null;
+        Writer writer = new Writer();
+        writer.setId(writerId);
+        return writer;
+    }
+
+
 }

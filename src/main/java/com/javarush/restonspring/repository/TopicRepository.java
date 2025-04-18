@@ -19,4 +19,6 @@ public interface TopicRepository extends BaseRepository<Topic, Long> {
     Page<Topic> findByContentContaining(String content, Pageable pageable);
 
     Page<Topic> findByCreatedBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
+
+    boolean existsByTitle(String title);
 }

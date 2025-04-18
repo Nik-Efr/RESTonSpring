@@ -5,12 +5,13 @@ import com.javarush.restonspring.dto.response.LabelResponseTo;
 import com.javarush.restonspring.mapper.LabelMapper;
 import com.javarush.restonspring.model.Label;
 import com.javarush.restonspring.service.impl.LabelServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1.0/labels")
@@ -37,8 +38,10 @@ public class LabelController {
     }
 
     @GetMapping
-    public Page<LabelResponseTo> getAll(Pageable pageable) {
-        return labelService.getAll(pageable).map(labelMapper::toDto);
+    public List<LabelResponseTo> getAll() {
+        return labelService.getAll().stream()
+                .map(labelMapper::toDto)
+                .toList();
     }
 
     @PutMapping("/{id}")

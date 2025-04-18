@@ -6,13 +6,23 @@ import com.javarush.restonspring.model.Topic;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = WriterMapper.class)
 public interface TopicMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "modified", ignore = true)
-    Topic toEntity(TopicRequestTo dto);
+    @Mapping(target = "writer", source = "writerId")
+    Topic toEntity(TopicRequestTo requestTo);
 
-    TopicResponseTo toDto(Topic entity);
+    @Mapping(target = "writerId", source = "writer.id")
+    TopicResponseTo toDto(Topic topic);
+
+    default Topic map(Long topicId) {
+        if (topicId == null) return null;
+        Topic topic = new Topic();
+        topic.setId(topicId);
+        return topic;
+    }
+
 }
