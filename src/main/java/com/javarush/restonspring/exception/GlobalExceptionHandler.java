@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         ErrorResponse errorResponse = ErrorResponse.of(
-                "40002", // 400 (Bad Request) + 02 (Invalid Input)
+                "400",
                 errorMessage,
                 request.getRequestURI()
         );
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         ErrorResponse errorResponse = ErrorResponse.of(
-                "40003", // 400 (Bad Request) + 03 (Constraint Violation)
+                "400",
                 errorMessage,
                 request.getRequestURI()
         );

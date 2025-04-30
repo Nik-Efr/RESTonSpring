@@ -1,7 +1,7 @@
 package com.javarush.restonspring.exception;
 
 public class DuplicateTitleException extends ApplicationException {
-    private static final String ERROR_CODE = "40902"; // 409 Conflict + 02 (дубликат заголовка)
+    private static final String ERROR_CODE = "409";
 
     public DuplicateTitleException(String title) {
         super("Topic with title '" + title + "' already exists", ERROR_CODE);
