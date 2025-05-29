@@ -113,4 +113,10 @@
                 constraintName="uc_topic_title"/>
     </changeSet>
 
+    <changeSet id="4" author="efremov">
+        <comment>Load test data</comment>
+        <sqlFile path="db/changelog/test-data.sql" relativeToChangelogFile="false"/>
+    </changeSet>
+
+
 </databaseChangeLog>
